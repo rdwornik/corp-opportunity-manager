@@ -4,7 +4,7 @@ naming:
   date_format: "%Y-%m-%d"
 
 templates:
-  discovery_deck: "BY_Discovery_Template.pptx"
+  discovery_deck: "Blue_Yonder_Corporate_Presentation_Deck.pptx"
 
 folder_structure:
   # Subfolders created in every new project

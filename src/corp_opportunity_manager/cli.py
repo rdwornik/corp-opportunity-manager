@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import io
 import logging
 import sys
 from datetime import date, datetime
@@ -16,7 +17,9 @@ from corp_opportunity_manager.config import load_config
 from corp_opportunity_manager.folder_manager import create_opportunity
 from corp_opportunity_manager.models import OpportunityConfig
 
-console = Console()
+# Force UTF-8 output on Windows to handle international characters in data
+_stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+console = Console(file=_stdout)
 logger = logging.getLogger("corp_opportunity_manager")
 
 
@@ -113,13 +116,13 @@ def list_cmd() -> None:
         return
 
     table = Table(title="Active Opportunities")
-    table.add_column("Client", style="bold")
-    table.add_column("Product")
+    table.add_column("Account", style="bold")
+    table.add_column("Opportunity")
     table.add_column("Stage")
     table.add_column("Folder")
 
     for row in rows:
-        table.add_row(row.client, row.product, row.stage, row.folder_link or "-")
+        table.add_row(row.account_name, row.opportunity_name, row.stage, row.folder_link or "-")
 
     console.print(table)
 
