@@ -1,155 +1,113 @@
-# CLAUDE.md — Engineering Principles & Agent Behavior
+# CLAUDE.md — corp-opportunity-manager
 
-> **Purpose:** Drop this file into any project root to anchor Claude Code sessions to disciplined engineering process. Paste relevant sections into chat context when the agent loses focus.
->
-> **Source:** Boris Cherny's Claude Code rules + Rob's dev standards. Last updated: 2026-02-24.
+## What this repo does
 
----
+Pre-sales opportunity lifecycle management CLI for Blue Yonder. Creates project folders, copies deck templates, manages metadata in Excel, and provides a conversational chat agent (Gemini Flash) for natural-language opportunity management in Polish or English.
 
-## Workflow Orchestration
+## Quick start
 
-### 1. Plan Mode Default
-- Enter plan mode for ANY non-trivial task (3+ steps or architectural decisions)
-- If something goes sideways, STOP and re-plan immediately — don't keep pushing
-- Use plan mode for verification steps, not just building
-- Write detailed specs upfront to reduce ambiguity
+```bash
+python -m venv .venv
+.venv/Scripts/activate   # Windows
+pip install -e ".[dev,llm]"
+cp .env.example .env     # then edit paths and API keys
+pytest                   # 61 tests, all passing
+```
 
-### 2. Subagent Strategy
-- Use subagents liberally to keep main context window clean
-- Offload research, exploration, and parallel analysis to subagents
-- For complex problems, throw more compute at it via subagents
-- One task per subagent for focused execution
+## Architecture
 
-### 3. Self-Improvement Loop
-- After ANY correction from the user: update `tasks/lessons.md` with the pattern
-- Write rules for yourself that prevent the same mistake
-- Ruthlessly iterate on these lessons until mistake rate drops
-- Review lessons at session start for relevant project
+```
+src/corp_opportunity_manager/
+  cli.py              Click CLI entry point (`com` command)
+  chat.py             Rich terminal chat loop + intent router (8 intents)
+  llm_client.py       Gemini Flash structured JSON intent parsing
+  folder_manager.py   Folder creation, template copying, metadata
+  folder_standards.py Structure audit, subfolder creation, naming conventions
+  excel_manager.py    Read/update Project_Codes.xlsm (handles locked files)
+  models.py           Dataclasses: OpportunityConfig, IntentResult, etc.
+  config.py           YAML + .env config loader
+  templates.py        Naming convention logic (folders, decks)
+```
 
-### 4. Verification Before Done
-- Never mark a task complete without proving it works
-- Diff behavior between main and your changes when relevant
-- Ask yourself: "Would a staff engineer approve this?"
-- Run tests, check logs, demonstrate correctness
+**Data flow:** CLI/chat → config loader → folder_manager/excel_manager → filesystem/Excel
 
-### 5. Demand Elegance (Balanced)
-- For non-trivial changes: pause and ask "is there a more elegant way?"
-- If a fix feels hacky: "Knowing everything I know now, implement the elegant solution"
-- Skip this for simple, obvious fixes — don't over-engineer
-- Challenge your own work before presenting it
+**Entry point:** `com` (installed via `pyproject.toml [project.scripts]`)
 
-### 6. Autonomous Bug Fixing
-- When given a bug report: just fix it. Don't ask for hand-holding
-- Point at logs, errors, failing tests — then resolve them
-- Zero context switching required from the user
-- Go fix failing CI tests without being told how
+## Dev standards
 
----
+- Python 3.10+, Windows-first (PowerShell, `py -m`, pathlib)
+- `pyproject.toml` as single source of truth (no requirements.txt)
+- `ruff` lint + format, `pytest` quality gate
+- Feature branches, no direct commits to main
+- Logging not print, dataclasses not dicts
+- Click CLI, Rich output
+- Config in `config/default.yaml`, secrets in `.env`
+- Type hints everywhere
 
-## Task Management
+## Key commands
 
-1. **Plan First:** Write plan to `tasks/todo.md` with checkable items
-2. **Verify Plan:** Check in before starting implementation
-3. **Track Progress:** Mark items complete as you go
-4. **Explain Changes:** High-level summary at each step
-5. **Document Results:** Add review section to `tasks/todo.md`
-6. **Capture Lessons:** Update `tasks/lessons.md` after corrections
+```powershell
+# Create new opportunity
+com new "Lenzing" -p Planning -c "Jan Kowalski (VP Supply Chain)"
 
----
+# List opportunities (from Excel or folders)
+com list
 
-## Core Principles
+# Show project details
+com show "Lenzing"
 
-- **Simplicity First:** Make every change as simple as possible. Impact minimal code.
-- **No Laziness:** Find root causes. No temporary fixes. Senior developer standards.
-- **Minimal Impact:** Changes should only touch what's necessary. Avoid introducing bugs.
+# Copy a new deck template
+com prep-deck "Lenzing" -t "Technical Deep Dive" --date 2026-03-15
 
----
+# Interactive chat agent (requires GEMINI_API_KEY)
+com chat
+```
 
-## Architecture & Code Standards
+## Test suite
 
-### Structure
-- **Clean architecture** — single-responsibility modules, clear separation of concerns
-- **Config over hardcoding** — all paths, URLs, credentials, environment-specific values go in YAML config files (never hardcoded)
-- **Dataclasses over dicts** — typed data structures, not loose dictionaries
-- **`.env` files** for secrets and dynamic paths — never commit these
-- **README.md** in every project root — purpose, setup, usage, architecture overview
+```bash
+pytest tests/ -v    # 61 tests
+```
 
-### Code Quality
-- **Logging, not print** — use Python `logging` module with appropriate levels
-- **Comments** — explain *why*, not *what*. Document non-obvious decisions
-- **Type hints** everywhere in Python
-- **Error handling** — explicit, meaningful error messages. No bare `except:`
+Coverage:
+- `test_folder_manager.py` — folder creation, template copy, metadata
+- `test_excel_manager.py` — Excel read/write, locked file fallback
+- `test_templates.py` — naming convention logic
+- `test_folder_standards.py` — structure audit, subfolder creation
+- `test_llm_client.py` — Gemini intent parsing (mocked)
+- `test_chat.py` — chat session routing (mocked)
 
-### CLI & Output
-- **Click** for CLI interfaces
-- **Rich** for terminal output (tables, progress bars, panels)
+Gaps: `cli.py` (Click commands) and `config.py` have no dedicated tests.
 
-### Testing & Verification
-- **pytest** as test framework
-- Write tests before marking anything done
-- Test edge cases, not just happy paths
-- If you can't test it, you can't ship it
+## Dependencies
 
-### Git Workflow
-- **Feature branches** — never commit directly to main
-- Meaningful commit messages (imperative mood: "Add X", "Fix Y")
-- Small, focused commits — one logical change per commit
-
----
-
-## Knowledge Management (Obsidian)
-
-- YAML frontmatter on all notes
-- Sparse `[[wikilinks]]` in text — max 2-3 per paragraph
-- Source/extract separation: source notes are immutable, extracts are regenerable
-- `_meta.yaml` for versioning metadata
-
----
-
-## Communication Style
-
-- **Insight-first** — lead with the "so what", not a description of what you did
-- **Bold-first paragraphs** for scanning
-- **No corporate filler** — cut fluff words, be direct
-- **Critical thinking** — challenge assumptions, flag risks, present tradeoffs
-- **ADHD-optimized** — scannable, structured, front-loaded with the important bits
-
----
-
-## Anti-Patterns (Never Do These)
-
-| Anti-Pattern | Do Instead |
+| Package | Purpose |
 |---|---|
-| Hardcoded paths/URLs | YAML config + `.env` |
-| `print()` debugging | `logging.debug()` / `logging.info()` |
-| Raw dicts for data | Dataclasses with type hints |
-| Committing to main | Feature branch → PR |
-| "It works on my machine" | Tests + CI verification |
-| Asking "should I fix it?" | Just fix it, show the diff |
-| Vague commit messages | "Fix rate limiter edge case in retry logic" |
-| Temporary workarounds | Root cause analysis → proper fix |
-| Over-engineering simple tasks | Proportional effort to problem size |
-| Losing context mid-task | `tasks/todo.md` + `tasks/lessons.md` |
+| click | CLI framework |
+| rich | Terminal output (tables, panels, prompts) |
+| pyyaml | Config file loading |
+| openpyxl | Excel read/write |
+| python-dotenv | .env file loading |
+| google-genai (optional) | Gemini Flash LLM for chat agent |
 
----
+## Configuration
 
-## Quick-Paste Snippets
+- `config/default.yaml` — naming patterns, folder standards, stages, products, LLM settings
+- `.env` — paths (PROJECTS_ROOT, TEMPLATES_ROOT, etc.), API keys (GEMINI_API_KEY)
+- `.env.example` — template with all expected variables
 
-### Session Start Reminder
-```
-Before starting: read tasks/lessons.md and tasks/todo.md. Plan mode for anything non-trivial. Feature branch. Tests. Logging. Config in YAML. Go.
-```
+## Ecosystem
 
-### Mid-Session Course Correction
-```
-STOP. You're drifting. Re-read CLAUDE.md core principles: simplicity first, no laziness, minimal impact. Re-plan in plan mode before continuing.
-```
+Part of the corp-by-os ecosystem:
+- **corp-by-os** — orchestrator
+- **corp-os-meta** — shared schemas
+- **corp-knowledge-extractor** — extraction engine
+- **corp-rfp-agent** — RFP automation
+- **ai-council** — multi-model debate
 
-### Pre-Commit Checklist
-```
-Before marking done: tests pass? Logs clean? Diff reviewed? Staff engineer would approve? Config externalized? README updated if needed?
-```
+## Known issues
 
----
-
-*This document is a living reference. Update it as patterns evolve.*
+- `cli.py` and `config.py` have no dedicated test coverage
+- `com chat` not yet live-tested with real Gemini API key
+- `callable` type hint in `chat.py:296` should be `typing.Callable` (mypy would flag)
+- Excel ZipFile warning in tests (openpyxl read_only mode cleanup)
