@@ -1,6 +1,6 @@
 [project]
 name = "corp-opportunity-manager"
-version = "0.1.0"
+version = "0.2.0"
 description = "Opportunity lifecycle management for pre-sales workflows"
 requires-python = ">=3.10"
 dependencies = [
@@ -13,6 +13,7 @@ dependencies = [
 
 [project.optional-dependencies]
 graph = ["msal>=1.24", "httpx>=0.25"]
+llm = ["google-genai>=1.0"]
 dev = ["pytest>=7.0", "pytest-cov", "ruff"]
 
 [project.scripts]

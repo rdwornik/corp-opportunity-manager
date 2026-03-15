@@ -2,6 +2,7 @@ naming:
   folder_pattern: "{client}_{product}"
   pptx_pattern: "{client}_{date}_{topic}.pptx"
   date_format: "%Y-%m-%d"
+  meeting_date_format: "%Y.%m.%d"
 
 templates:
   discovery_deck: "Blue_Yonder_Corporate_Presentation_Deck.pptx"
@@ -11,6 +12,20 @@ folder_structure:
   # _knowledge/ is always created for metadata; others are optional
   create_dirs:
     - "_knowledge"
+
+folder_standards:
+  # Standard subfolders per project (created on demand, not all at once)
+  subfolders:
+    rfp:
+      path: "RFP"
+      children:
+        - "Original"
+        - "WIP"
+        - "Submission"
+    meetings:
+      path: "Meetings"
+    implementation:
+      path: "Implementation Services"
 
 stages:
   - discovery
@@ -29,3 +44,8 @@ products:
   - CatMan
   - Network
   - Platform
+
+llm:
+  model: "gemini-2.5-flash"
+  temperature: 0.3
+  max_history: 10

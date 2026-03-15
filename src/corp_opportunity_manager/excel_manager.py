@@ -29,11 +29,11 @@ from openpyxl import load_workbook
 logger = logging.getLogger(__name__)
 
 # Column indices (0-based) matching the real spreadsheet
-_COL_ACCOUNT = 2     # C: Account Name (client)
-_COL_OPP_NAME = 3    # D: Opportunity Name
-_COL_INDUSTRY = 6    # G: JDA Industry
-_COL_STAGE = 7       # H: Stage
-_COL_FOLDER = 12     # M: Folder Link (1-based: 13)
+_COL_ACCOUNT = 2  # C: Account Name (client)
+_COL_OPP_NAME = 3  # D: Opportunity Name
+_COL_INDUSTRY = 6  # G: JDA Industry
+_COL_STAGE = 7  # H: Stage
+_COL_FOLDER = 12  # M: Folder Link (1-based: 13)
 
 
 @dataclass

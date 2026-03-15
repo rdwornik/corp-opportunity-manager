@@ -23,26 +23,74 @@ def sample_excel(tmp_path: Path) -> Path:
     wb = Workbook()
     ws = wb.active
     ws.title = "Main"
-    ws.append([
-        "Empty", "Name", "Account Name", "Opportunity Name", "Link to SF",
-        "Booking Amount", "JDA Industry", "Stage", "Close Date",
-        "JDA OpptyID2", "Date Added", "Next Step", "Folder Link",
-    ])
-    ws.append([
-        None, "Robert Dwornik", "Lenzing AG", "Lenzing - Planning", "",
-        500000, "Manufacturing", "Prove Value", None,
-        "OP-001", None, "Discovery call", "",
-    ])
-    ws.append([
-        None, "Robert Dwornik", "Honda Motor Co", "Honda - WMS", "",
-        750000, "Manufacturing", "Negotiate", None,
-        "OP-002", None, "POC next week", "",
-    ])
-    ws.append([
-        None, "Robert Dwornik", "BMW Group", "BMW - TMS", "",
-        300000, "Automotive", "Disqualified", None,
-        "OP-003", None, "", "C:\\projects\\BMW_TMS",
-    ])
+    ws.append(
+        [
+            "Empty",
+            "Name",
+            "Account Name",
+            "Opportunity Name",
+            "Link to SF",
+            "Booking Amount",
+            "JDA Industry",
+            "Stage",
+            "Close Date",
+            "JDA OpptyID2",
+            "Date Added",
+            "Next Step",
+            "Folder Link",
+        ]
+    )
+    ws.append(
+        [
+            None,
+            "Robert Dwornik",
+            "Lenzing AG",
+            "Lenzing - Planning",
+            "",
+            500000,
+            "Manufacturing",
+            "Prove Value",
+            None,
+            "OP-001",
+            None,
+            "Discovery call",
+            "",
+        ]
+    )
+    ws.append(
+        [
+            None,
+            "Robert Dwornik",
+            "Honda Motor Co",
+            "Honda - WMS",
+            "",
+            750000,
+            "Manufacturing",
+            "Negotiate",
+            None,
+            "OP-002",
+            None,
+            "POC next week",
+            "",
+        ]
+    )
+    ws.append(
+        [
+            None,
+            "Robert Dwornik",
+            "BMW Group",
+            "BMW - TMS",
+            "",
+            300000,
+            "Automotive",
+            "Disqualified",
+            None,
+            "OP-003",
+            None,
+            "",
+            "C:\\projects\\BMW_TMS",
+        ]
+    )
 
     path = tmp_path / "Project_Codes.xlsm"
     wb.save(path)

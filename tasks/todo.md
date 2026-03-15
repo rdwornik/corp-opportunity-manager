@@ -161,21 +161,25 @@ corp-opportunity-manager/
 │   └── corp_opportunity_manager/
 │       ├── __init__.py
 │       ├── cli.py              # Click CLI, entry point "com"
-│       ├── models.py           # OpportunityConfig, ProjectInfo dataclasses
+│       ├── chat.py             # Rich terminal chat loop + intent router
+│       ├── models.py           # OpportunityConfig, ProjectInfo, IntentResult
 │       ├── config.py           # YAML config loader
 │       ├── folder_manager.py   # Create folders, copy templates
-│       ├── excel_manager.py    # Read/update project codes Excel
-│       ├── graph_client.py     # Microsoft Graph API (Phase 2+)
+│       ├── folder_standards.py # Structure audit, subfolder creation, naming
+│       ├── excel_manager.py    # Read/update Project_Codes.xlsm
+│       ├── llm_client.py       # Gemini Flash intent parsing
 │       └── templates.py        # Template naming conventions
 │
 ├── config/
-│   ├── default.yaml            # Paths, templates, naming conventions
-│   └── onboarding_tasks.yaml   # Task checklist template (Phase 3)
+│   └── default.yaml            # Paths, templates, naming, folder standards
 │
 ├── tests/
 │   ├── conftest.py
-│   ├── test_folder_manager.py
+│   ├── test_chat.py
 │   ├── test_excel_manager.py
+│   ├── test_folder_manager.py
+│   ├── test_folder_standards.py
+│   ├── test_llm_client.py
 │   └── test_templates.py
 │
 └── tasks/
@@ -307,38 +311,42 @@ com archive "Lenzing" --reason lost --notes "Lost to o9 on pricing"
 
 ## Implementation Checklist
 
-### Phase 0: Project Setup
-- [x] Create repo at `C:\Users\1028120\Documents\Scripts\corp-opportunity-manager`
-- [x] git init, feature/bootstrap branch
+### Phase 0: Project Setup (DONE — v0.1.0)
+- [x] Create repo, git init
 - [x] pyproject.toml, .env.example, .gitignore
 - [x] python -m venv .venv, pip install -e ".[dev]"
 - [x] CLAUDE.md, tasks/todo.md, tasks/lessons.md
 - [x] config/default.yaml
-- [ ] Initial commit, merge to main
+- [x] Initial commit, merge to main
 
-### Phase 1: MVP
-- [x] models.py — OpportunityConfig, ProjectInfo
+### Phase 1: MVP (DONE — v0.1.0)
+- [x] models.py — OpportunityConfig, ProjectInfo, CreationResult
 - [x] config.py — load YAML + .env
 - [x] folder_manager.py — create folder + copy template + rename
 - [x] templates.py — naming convention logic
-- [x] excel_manager.py — read project_codes.xlsx, find/update row
+- [x] excel_manager.py — read Project_Codes.xlsm, find/update row, locked-file fallback
 - [x] cli.py — `com new`, `com list`, `com show`, `com prep-deck`
-- [x] test_folder_manager.py, test_excel_manager.py, test_templates.py (19/19 passing)
-- [ ] Test on real MyWork folder
-- [ ] Commit, merge to main, tag v0.1.0
+- [x] test_folder_manager.py, test_excel_manager.py, test_templates.py (20/20 passing)
+- [x] Tested on real MyWork folder (OneDrive paths, real Excel, real deck template)
+- [x] Merged to main, tagged v0.1.0
 
-### Phase 2: Graph API
-- [ ] Branch: feature/graph
+### Phase 2: Chat Agent + Folder Standards (IN PROGRESS — feature/chat-agent)
+- [x] Branch: feature/chat-agent
+- [x] models.py — add IntentResult, StructureIssue
+- [x] llm_client.py — Gemini Flash (google-genai SDK), structured JSON intent parsing
+- [x] folder_standards.py — structure audit, subfolder creation (RFP/Meetings/Implementation), naming
+- [x] chat.py — Rich terminal loop + intent router (8 intents)
+- [x] cli.py — add `com chat` command
+- [x] config updates (default.yaml folder_standards + llm sections, .env.example)
+- [x] test_llm_client.py, test_folder_standards.py, test_chat.py (61/61 passing)
+- [ ] Live test `com chat` with real Gemini API key
+- [ ] Commit, merge to main, tag v0.2.0
+- [ ] README.md
+
+### Phase 3: Microsoft Graph Integration (FUTURE)
 - [ ] graph_client.py — MSAL auth, OneNote section creation
 - [ ] Company overview (web search → markdown)
-- [ ] Excel link auto-insertion
-- [ ] Tests
-- [ ] Merge, tag v0.2.0
-
-### Phase 3: Task Automation
-- [ ] Branch: feature/tasks
-- [ ] Planner/To Do integration via Graph
-- [ ] Configurable task templates
+- [ ] Planner/To Do task creation from YAML templates
 - [ ] Merge, tag v0.3.0
 
 ---

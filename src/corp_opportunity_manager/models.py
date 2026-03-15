@@ -52,3 +52,26 @@ class CreationResult:
     deck_path: Path | None
     info_path: Path
     notes_path: Path
+
+
+# --- Phase 2: Chat agent models ---
+
+
+@dataclass
+class IntentResult:
+    """Parsed intent from the LLM."""
+
+    intent: str
+    entities: dict[str, str | None]
+    response_text: str
+    needs_confirmation: bool = False
+    confidence: float = 1.0
+
+
+@dataclass
+class StructureIssue:
+    """A problem found during folder structure audit."""
+
+    issue_type: str  # missing_folder, non_standard_name, misplaced_file
+    path: str
+    suggestion: str

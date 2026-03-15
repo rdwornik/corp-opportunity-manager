@@ -42,6 +42,15 @@ def app_config(tmp_projects: Path, tmp_templates: Path, tmp_path: Path) -> AppCo
         },
         templates={"discovery_deck": "BY_Discovery_Template.pptx"},
         folder_structure={"create_dirs": ["_knowledge"]},
-        stages=["discovery", "qualification", "rfp", "proposal", "negotiation", "won", "lost", "archived"],
+        stages=[
+            "discovery",
+            "qualification",
+            "rfp",
+            "proposal",
+            "negotiation",
+            "won",
+            "lost",
+            "archived",
+        ],
         products=["Planning", "WMS", "TMS", "CatMan", "Network", "Platform"],
     )

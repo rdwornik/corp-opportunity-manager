@@ -38,7 +38,9 @@ def cli(verbose: bool) -> None:
 @click.option("--stage", "-s", default="discovery", help="Opportunity stage.")
 @click.option("--topic", "-t", default="Discovery", help="Deck topic for the template copy.")
 @click.option("--date", "date_str", default=None, help="Date override (YYYY-MM-DD).")
-def new(client: str, product: str, contact: str, stage: str, topic: str, date_str: str | None) -> None:
+def new(
+    client: str, product: str, contact: str, stage: str, topic: str, date_str: str | None
+) -> None:
     """Create a new opportunity with folder, deck, and metadata."""
     config = load_config()
 
@@ -230,6 +232,22 @@ def _list_from_folders(config) -> None:
         table.add_row(d.name, has_meta)
 
     console.print(table)
+
+
+@cli.command()
+def chat() -> None:
+    """Start an interactive chat session with the opportunity agent."""
+    config = load_config()
+
+    try:
+        from corp_opportunity_manager.chat import ChatSession
+    except ImportError as e:
+        console.print(f"[red]Missing dependency for chat: {e}[/red]")
+        console.print("[yellow]Install with: pip install -e '.[llm]'[/yellow]")
+        sys.exit(1)
+
+    session = ChatSession(config, console)
+    session.run()
 
 
 def _try_update_excel(config, client: str, folder_path: Path) -> None:
