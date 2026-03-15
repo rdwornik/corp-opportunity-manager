@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import shutil
+from collections.abc import Callable
 from datetime import date, datetime
 from pathlib import Path
 
@@ -296,7 +297,7 @@ def _handle_fallback(session: ChatSession, result: IntentResult) -> None:
 
 # --- Intent handler registry ---
 
-_INTENT_HANDLERS: dict[str, callable] = {
+_INTENT_HANDLERS: dict[str, Callable] = {
     "create_opportunity": _handle_create_opportunity,
     "prep_deck": _handle_prep_deck,
     "show_project": _handle_show_project,
