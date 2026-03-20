@@ -71,7 +71,10 @@ def _get_client():
 
     api_key = os.environ.get("GEMINI_API_KEY", "")
     if not api_key:
-        raise RuntimeError("GEMINI_API_KEY not set. Add it to your .env file.")
+        raise RuntimeError(
+            "GEMINI_API_KEY not set. Run 'keys list' in PowerShell. "
+            "Keys should be in Documents/.secrets/.env"
+        )
 
     return genai.Client(api_key=api_key)
 

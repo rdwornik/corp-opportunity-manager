@@ -10,7 +10,7 @@ Pre-sales opportunity lifecycle management CLI for Blue Yonder. Creates project 
 python -m venv .venv
 .venv/Scripts/activate   # Windows
 pip install -e ".[dev,llm]"
-cp .env.example .env     # then edit paths and API keys
+cp .env.example .env     # then edit paths (NOT api keys)
 pytest                   # 61 tests, all passing
 ```
 
@@ -90,10 +90,18 @@ Gaps: `cli.py` (Click commands) and `config.py` have no dedicated tests.
 | python-dotenv | .env file loading |
 | google-genai (optional) | Gemini Flash LLM for chat agent |
 
+## API Keys
+
+Keys loaded globally from `Documents/.secrets/.env` via PowerShell profile.
+Do NOT add API keys to local `.env`.
+Check: `keys list` | Update: `keys set KEY value` | Reload: `keys reload`
+
+This repo uses: `GEMINI_API_KEY`
+
 ## Configuration
 
 - `config/default.yaml` — naming patterns, folder standards, stages, products, LLM settings
-- `.env` — paths (PROJECTS_ROOT, TEMPLATES_ROOT, etc.), API keys (GEMINI_API_KEY)
+- `.env` — project-specific paths only (PROJECTS_ROOT, TEMPLATES_ROOT, etc.) — NO API keys
 - `.env.example` — template with all expected variables
 
 ## Ecosystem
