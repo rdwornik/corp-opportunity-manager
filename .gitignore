@@ -27,3 +27,9 @@ Thumbs.db
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Claude Code (local settings only — rules/ is tracked)
+.claude/settings.local.json
+
+# Ruff
+.ruff_cache/

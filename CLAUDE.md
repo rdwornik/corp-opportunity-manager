@@ -104,6 +104,19 @@ This repo uses: `GEMINI_API_KEY`
 - `.env` — project-specific paths only (PROJECTS_ROOT, TEMPLATES_ROOT, etc.) — NO API keys
 - `.env.example` — template with all expected variables
 
+## Integration points
+
+- **corp-by-os**: invoked via subprocess `com new` in workflows
+- **Shared state**: reads Project_Codes.xlsm from 90_System/ (shared with corp-sca-time-automation)
+
+COM is a standalone opportunity lifecycle tool. It does not write to the Obsidian vault.
+
+## Related repos
+
+- [ECOSYSTEM.md](../ECOSYSTEM.md) — full ecosystem overview
+- [corp-by-os](../corp-by-os/) — orchestrator (invokes COM via workflows)
+- [corp-os-meta](../corp-os-meta/) — shared schema
+
 ## Ecosystem
 
 Part of the corp-by-os ecosystem:
