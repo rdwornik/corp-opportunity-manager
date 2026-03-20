@@ -38,13 +38,19 @@ def load_config(config_path: Path | None = None, env_file: Path | None = None) -
         config_path: Path to YAML config. Defaults to config/default.yaml.
         env_file: Path to .env file. Defaults to project root .env.
     """
-    # Load .env
+    # Global API keys (Documents/.secrets/.env)
+    _global_env = Path.home() / "Documents" / ".secrets" / ".env"
+    if _global_env.exists():
+        load_dotenv(_global_env, override=False)
+        logger.debug("Loaded global .env from %s", _global_env)
+
+    # Local .env (project-specific vars only)
     project_root = Path(__file__).resolve().parent.parent.parent
     if env_file is None:
         env_file = project_root / ".env"
     if env_file.exists():
-        load_dotenv(env_file)
-        logger.debug("Loaded .env from %s", env_file)
+        load_dotenv(env_file, override=False)
+        logger.debug("Loaded local .env from %s", env_file)
 
     # Load YAML
     if config_path is None:
