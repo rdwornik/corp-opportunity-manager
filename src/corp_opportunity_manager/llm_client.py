@@ -97,7 +97,7 @@ def parse_intent(
     from google.genai import types
 
     client = _get_client()
-    model_name = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+    model_name = os.environ.get("GEMINI_MODEL", "gemini-3-flash-preview")
 
     # Build conversation contents
     contents: list[types.Content] = []

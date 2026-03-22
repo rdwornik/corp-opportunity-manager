@@ -46,6 +46,6 @@ products:
   - Platform
 
 llm:
-  model: "gemini-2.5-flash"
+  model: "gemini-3-flash-preview"
   temperature: 0.3
   max_history: 10
